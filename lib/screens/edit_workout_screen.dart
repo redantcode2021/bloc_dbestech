@@ -6,6 +6,9 @@ import 'package:flutter_bloc_app_complete/models/exercise.dart';
 import 'package:flutter_bloc_app_complete/screens/edit_exercise_screen.dart';
 import 'package:flutter_bloc_app_complete/states/workout_states.dart';
 
+import '../blocs/worksout_cubit.dart';
+import '../models/workout.dart';
+
 class EditWorkoutScreen extends StatelessWidget {
   const EditWorkoutScreen({Key? key}) : super(key: key);
 
@@ -21,7 +24,40 @@ class EditWorkoutScreen extends StatelessWidget {
                   onPressed: () =>
                       BlocProvider.of<WorkoutCubit>(context).goHome(),
                 ),
-                title: Text(we.workout!.title!),
+                title: InkWell(
+                  child: Text(we.workout!.title!),
+                  onTap: () => showDialog(
+                    context: context,
+                    builder: (_) {
+                      final controller = TextEditingController(
+                        text: we.workout!.title!,
+                      );
+                      return AlertDialog(
+                        content: TextField(
+                          controller: controller,
+                          decoration:
+                              const InputDecoration(labelText: "Workout Title"),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              if (controller.text.isNotEmpty) {
+                                Navigator.pop(context);
+                                Workout renamed = we.workout!
+                                    .copywith(title: controller.text);
+                                BlocProvider.of<WorkoutsCubit>(context)
+                                    .saveWorkout(renamed, we.index);
+                                BlocProvider.of<WorkoutCubit>(context)
+                                    .editWorkout(renamed, we.index);
+                              }
+                            },
+                            child: Text("Rename"),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
               ),
               body: ListView.builder(
                   itemCount: we.workout!.exercises.length,

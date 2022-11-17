@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app_complete/models/exercise.dart';
 import 'package:flutter_bloc_app_complete/models/workout.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 
-class WorkoutsCubit extends Cubit<List<Workout>> {
+class WorkoutsCubit extends HydratedCubit<List<Workout>> {
   WorkoutsCubit() : super([]);
 
   getWorkouts() async {
@@ -40,5 +40,25 @@ class WorkoutsCubit extends Cubit<List<Workout>> {
     state[index] = newWorkout;
     print('...I have ${state.length} states');
     emit([...state]);
+  }
+
+  @override
+  List<Workout>? fromJson(Map<String, dynamic> json) {
+    List<Workout> workouts = [];
+    json['workouts'].forEach((el) => workouts.add(Workout.fromJson(el)));
+    return workouts;
+  }
+
+  @override
+  Map<String, dynamic>? toJson(List<Workout> state) {
+    if (state is List<Workout>) {
+      var json = {'workouts': []};
+      for (var workout in state) {
+        json['workouts']!.add(workout.toJson());
+      }
+      return json;
+    } else {
+      return null;
+    }
   }
 }

@@ -27,19 +27,24 @@ class HomePage extends StatelessWidget {
                     value: workout,
                     headerBuilder: (BuildContext context, bool isExpanded) =>
                         ListTile(
-                      visualDensity: const VisualDensity(
-                        horizontal: 0,
-                        vertical: VisualDensity.maximumDensity,
-                      ),
-                      leading: IconButton(
-                          onPressed: () {
-                            BlocProvider.of<WorkoutCubit>(context).editWorkout(
-                                workout, workouts.indexOf(workout));
-                          },
-                          icon: const Icon(Icons.edit)),
-                      title: Text(workout.title!),
-                      trailing: Text(formatTime(workout.getTotal(), true)),
-                    ),
+                            visualDensity: const VisualDensity(
+                              horizontal: 0,
+                              vertical: VisualDensity.maximumDensity,
+                            ),
+                            leading: IconButton(
+                                onPressed: () {
+                                  BlocProvider.of<WorkoutCubit>(context)
+                                      .editWorkout(
+                                          workout, workouts.indexOf(workout));
+                                },
+                                icon: const Icon(Icons.edit)),
+                            title: Text(workout.title!),
+                            trailing:
+                                Text(formatTime(workout.getTotal(), true)),
+                            onTap: () => !isExpanded
+                                ? BlocProvider.of<WorkoutCubit>(context)
+                                    .startWorkout(workout)
+                                : null),
                     body: ListView.builder(
                       shrinkWrap: true,
                       itemCount: workout.exercises.length,

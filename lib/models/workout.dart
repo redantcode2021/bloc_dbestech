@@ -25,11 +25,11 @@ class Workout extends Equatable {
   Workout copywith({String? title}) =>
       Workout(title: title ?? this.title, exercises: exercises);
 
-  int getTotal() {
-    int time =
-        exercises.fold(0, (prev, ex) => prev + ex.prelude! + ex.duration!);
-    return time;
-  }
+  int getTotal() =>
+      exercises.fold(0, (prev, ex) => prev + ex.prelude! + ex.duration!);
+
+  Excercise getCurrentExercise(int? elapsed) =>
+      exercises.lastWhere((element) => element.startTime! <= elapsed!);
 
   @override
   List<Object?> get props => [title, exercises];
